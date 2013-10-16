@@ -1,0 +1,54 @@
+<?php
+/**
+ * Template Name: Blog Page
+ * Description: Page template to display blog posts
+ *
+ * @package WordPress
+ * @subpackage WP-Bootstrap
+ * @since WP-Bootstrap 0.1
+ */
+
+get_header(); ?>
+<?php while ( have_posts() ) : the_post(); ?>
+  <div class="row">
+      <?php if (function_exists('bootstrapwp_breadcrumbs')) bootstrapwp_breadcrumbs(); ?>
+  </div><!--/.row -->
+ <!-- Masthead
+ ================================================== -->
+
+<div class="row content">
+  <div class="span8">
+    <?php the_content();
+    endwhile;
+           // end of the loop
+    wp_reset_query();
+          // resetting the loop
+    ?>
+    <hr />
+  </div><!-- /.span8 -->
+
+  <div class="span8">
+    <?php
+              // Blog post query
+    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+    query_posts( array( 'post_type' => 'post', 'paged'=>$paged, 'showposts'=>0) );
+    if (have_posts()) : while ( have_posts() ) : the_post(); ?>
+    <div <?php post_class(); ?>>
+      <div class="row">
+        <div class="span2"><?php // Checking for a post thumbnail
+        if ( has_post_thumbnail() ) ?>
+        <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" >
+          <?php the_post_thumbnail();?></a>
+        </div><!-- /.span2 -->
+        <div class="span6">
+         <?php the_excerpt();?>
+       </div><!-- /.span6 -->
+     </div><!-- /.row -->
+     <hr />
+   </div><!-- /.post_class -->
+ <?php endwhile; endif; ?>
+ <?php bootstrapwp_content_nav('nav-below');?>
+
+</div><!-- /.span8 -->
+<?php get_sidebar('blog'); ?>
+<?php get_footer(); ?>
